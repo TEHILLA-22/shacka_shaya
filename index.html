@@ -282,13 +282,33 @@
             letter-spacing: 1px;
         }
 
-        .event-details {
-            text-align: center;
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(106, 90, 205, 0.1));
+        /* .event-details {
+           
+            
             padding: 3rem;
             border-radius: 20px;
+            
+           
+        } */
+          .event-details {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(106, 90, 205, 0.1));
+             backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 3rem;
+            margin: 30px 0;
             border: 1px solid rgba(212, 175, 55, 0.3);
-            backdrop-filter: blur(10px);
+            animation: fadeIn 1s ease-out 1.5s both;
+             text-align: center;
+        }
+
+         .event-details {
+            
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 1s ease-out 1.5s both;
         }
 
         .event-date {
@@ -391,6 +411,35 @@
             font-size: 1.2rem;
             font-weight: 600;
         }
+
+         .cta-section {
+            text-align: center;
+            margin: 40px 0;
+            animation: bounceIn 1s ease-out 2s both;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #f59e0b, #d97706);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
+            animation: buttonGlow 3s ease-in-out infinite;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(245, 158, 11, 0.5);
+            background: linear-gradient(45deg, #d97706, #92400e);
+        }
+
 
         /* Footer */
         .footer {
@@ -655,6 +704,11 @@
         </div>
     </section>
 
+      <div class="cta-section">
+            <button class="cta-button" onclick="shareEvent()">Share This Event</button>
+        </div>
+
+
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
@@ -704,6 +758,29 @@
                 navbar.classList.remove('scrolled');
             }
         });
+
+         // Share event function
+        function shareEvent() {
+            const shareData = {
+                title: 'Shacka Shaya - Revive Night of Prayer',
+                text: 'Join us for a powerful night of prayer and worship on July 20th, 2025 at 3PM. Together we praise and worship His Holy Name!',
+                url: window.location.href
+            };
+
+            if (navigator.share && navigator.canShare(shareData)) {
+                navigator.share(shareData);
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                const text = `${shareData.title}\n${shareData.text}\n${shareData.url}`;
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        alert('Event details copied to clipboard!');
+                    });
+                } else {
+                    alert('Please share manually: ' + text);
+                }
+            }
+        }
 
         // Music control
         const musicControl = document.getElementById('musicControl');
