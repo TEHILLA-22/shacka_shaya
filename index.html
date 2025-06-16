@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shacka Shaya - Revive Night of Prayer</title>
+    <title>Shacka Shaya - Rain of Glory</title>
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -11,164 +14,298 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary-gold: #D4AF37;
+            --deep-gold: #B8860B;
+            --dark-bg: #0a0a0a;
+            --secondary-bg: #1a1a1a;
+            --accent-purple: #6a5acd;
+            --text-light: #f8f8f8;
+            --text-gold: #FFD700;
+            --gradient-primary: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #B8860B 100%);
+            --gradient-bg: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%);
-            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background: var(--gradient-bg);
+            color: var(--text-light);
             overflow-x: hidden;
             position: relative;
         }
 
-        /* Animated background particles */
-        .particles {
+        /* Animated Background */
+        .bg-animation {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: 0;
+            z-index: -1;
+            opacity: 0.1;
         }
 
-        .particle {
+        .bg-animation::before {
+            content: '';
             position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: float 20s infinite linear;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="grad" cx="50%" cy="50%" r="50%"><stop offset="0%" style="stop-color:gold;stop-opacity:0.3"/><stop offset="100%" style="stop-color:gold;stop-opacity:0"/></radialGradient></defs><circle cx="50" cy="50" r="30" fill="url(%23grad)"/></svg>') repeat;
+            animation: float 20s ease-in-out infinite;
         }
 
         @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
         }
 
-        .container {
-            position: relative;
-            z-index: 1;
-            min-height: 100vh;
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(10, 10, 10, 0.98);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 50px;
-            animation: fadeInDown 1s ease-out;
+            padding: 0 2rem;
         }
 
         .logo {
-            font-size: 4rem;
-            font-weight: 900;
-            background: linear-gradient(45deg, #f59e0b, #d97706, #92400e);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(245, 158, 11, 0.5);
-            margin-bottom: 10px;
-            letter-spacing: 3px;
-            animation: glow 2s ease-in-out infinite alternate;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
-        .subtitle {
-            font-size: 1.5rem;
-            color: #e2e8f0;
-            font-weight: 300;
-            margin-bottom: 20px;
-            opacity: 0;
-            animation: fadeIn 1s ease-out 0.5s forwards;
-        }
-
-        .event-title {
-            font-size: 3rem;
-            font-weight: 800;
-            background: linear-gradient(45deg, #3b82f6, #1d4ed8, #1e40af);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            animation: pulse 3s ease-in-out infinite;
-        }
-
-        .event-subtitle {
-            font-size: 1.2rem;
-            color: #cbd5e1;
-            font-weight: 400;
-            margin-bottom: 30px;
-        }
-
-        .countdown-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 40px;
-            margin: 30px 0;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-            animation: slideUp 1s ease-out 1s both;
+        .logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-gold);
             transition: transform 0.3s ease;
         }
 
-        .countdown-container:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.4);
+        .logo img:hover {
+            transform: scale(1.1) rotate(360deg);
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .music-control {
+            background: linear-gradient(45deg, var(--primary-gold), var(--deep-gold));
+            border: none;
+            color: var(--dark-bg);
+            padding: 0.8rem;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 2rem;
+            z-index: 2;
+        }
+
+        .hero-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 5px solid var(--primary-gold);
+            margin: 0 auto 2rem;
+            display: block;
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.3);
+            transition: all 0.5s ease;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-gold);
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Countdown Section */
+        .countdown-section {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(106, 90, 205, 0.1));
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .countdown-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
 
         .countdown {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
         }
 
-        .time-unit {
+        .countdown-item {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(255, 215, 0, 0.1));
+            padding: 2rem;
+            border-radius: 20px;
             text-align: center;
-            background: linear-gradient(145deg, rgba(59, 130, 246, 0.2), rgba(29, 78, 216, 0.2));
-            border-radius: 15px;
-            padding: 25px 20px;
-            min-width: 120px;
-            border: 1px solid rgba(59, 130, 246, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            backdrop-filter: blur(10px);
             transition: all 0.3s ease;
-            animation: fadeInUp 1s ease-out calc(1.2s + var(--delay)) both;
+            position: relative;
+            overflow: hidden;
         }
 
-        .time-unit:hover {
-            transform: scale(1.05);
-            background: linear-gradient(145deg, rgba(59, 130, 246, 0.3), rgba(29, 78, 216, 0.3));
+        .countdown-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            transition: left 0.5s ease;
         }
 
-        .time-number {
+        .countdown-item:hover::before {
+            left: 100%;
+        }
+
+        .countdown-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.3);
+        }
+
+        .countdown-number {
             font-size: 3rem;
-            font-weight: 900;
-            color: #f1f5f9;
+            font-weight: 700;
+            color: var(--text-gold);
             display: block;
-            text-shadow: 0 0 20px rgba(241, 245, 249, 0.5);
-            animation: countPulse 2s ease-in-out infinite;
+            margin-bottom: 0.5rem;
         }
 
-        .time-label {
-            font-size: 0.9rem;
-            color: #cbd5e1;
+        .countdown-label {
+            font-size: 1.1rem;
+            color: var(--text-light);
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-top: 8px;
-            font-weight: 600;
         }
 
         .event-details {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(15px);
-            border-radius: 15px;
-            padding: 30px;
-            margin: 30px 0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            animation: fadeIn 1s ease-out 1.5s both;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(106, 90, 205, 0.1));
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .event-date {
+            font-size: 1.5rem;
+            color: var(--text-gold);
+            margin-bottom: 1rem;
+        }
+
+        .event-venue {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .event-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.9;
         }
 
         .detail-item {
@@ -186,155 +323,277 @@
             opacity: 0.8;
         }
 
-        .cta-section {
-            text-align: center;
-            margin: 40px 0;
-            animation: bounceIn 1s ease-out 2s both;
+
+        /* Gallery Section */
+        .gallery-section {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(26, 26, 46, 0.9));
         }
 
-        .cta-button {
-            background: linear-gradient(45deg, #f59e0b, #d97706);
-            color: white;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
+        .gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 50px rgba(212, 175, 55, 0.3);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: all 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(212, 175, 55, 0.8), rgba(106, 90, 205, 0.8));
+            opacity: 0;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
-            animation: buttonGlow 3s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(245, 158, 11, 0.5);
-            background: linear-gradient(45deg, #d97706, #92400e);
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
         }
 
-        .footer {
+        .gallery-text {
+            color: white;
             text-align: center;
-            margin-top: 50px;
-            padding: 20px;
-            color: #64748b;
-            font-size: 0.9rem;
-            animation: fadeIn 1s ease-out 2.5s both;
-        }
-
-        .footer a {
-            color: #f59e0b;
-            text-decoration: none;
+            font-size: 1.2rem;
             font-weight: 600;
-            transition: color 0.3s ease;
         }
 
-        .footer a:hover {
-            color: #d97706;
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.95), rgba(26, 26, 26, 0.95));
+            padding: 3rem 0 1rem;
+            text-align: center;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
         }
 
-        /* Animations */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-50px); }
-            to { opacity: 1; transform: translateY(0); }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        .footer-text {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes bounceIn {
-            0% { opacity: 0; transform: scale(0.3); }
-            50% { transform: scale(1.05); }
-            70% { transform: scale(0.9); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        @keyframes glow {
-            from { text-shadow: 0 0 30px rgba(245, 158, 11, 0.5); }
-            to { text-shadow: 0 0 40px rgba(245, 158, 11, 0.8), 0 0 60px rgba(245, 158, 11, 0.4); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-
-        @keyframes countPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        @keyframes buttonGlow {
-            0%, 100% { box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3); }
-            50% { box-shadow: 0 10px 30px rgba(245, 158, 11, 0.6), 0 0 40px rgba(245, 158, 11, 0.2); }
+        .footer-credits {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--text-gold);
+            font-size: 0.9rem;
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .logo { font-size: 2.5rem; }
-            .event-title { font-size: 2rem; }
-            .countdown { gap: 15px; }
-            .time-unit { min-width: 80px; padding: 20px 15px; }
-            .time-number { font-size: 2rem; }
-            .countdown-container { padding: 25px; }
-            .event-details { padding: 20px; }
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .countdown {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .countdown-item {
+                padding: 1.5rem;
+            }
+
+            .countdown-number {
+                font-size: 2rem;
+            }
+
+            .nav-container {
+                padding: 0 1rem;
+            }
+
+            .logo-text {
+                font-size: 1.2rem;
+            }
+
+            .hero-image {
+                width: 150px;
+                height: 150px;
+            }
         }
 
         @media (max-width: 480px) {
-            .logo { font-size: 2rem; }
-            .event-title { font-size: 1.5rem; }
-            .time-unit { min-width: 70px; padding: 15px 10px; }
-            .time-number { font-size: 1.5rem; }
+            .countdown {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-content {
+                padding: 1rem;
+            }
+
+            .countdown-container,
+            .gallery-container {
+                padding: 0 1rem;
+            }
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary-gold);
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: float-particle 8s infinite linear;
+        }
+
+        @keyframes float-particle {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="particles" id="particles"></div>
-    
-    <div class="container">
-        <div class="header">
-            <h1 class="logo">SHACKA SHAYA</h1>
-            <p class="subtitle">Present</p>
-            <h2 class="event-title">REVIVE</h2>
-            <p class="event-subtitle">Night of Prayer</p>
-            <p style="color: #cbd5e1; font-style: italic; margin-top: 10px;">Together We Praise and Worship His Holy Name</p>
-        </div>
+    <!-- Background Animation -->
+    <div class="bg-animation"></div>
 
+    <!-- Floating Particles -->
+    <div class="particles"></div>
+
+    <!-- Background Audio -->
+    <audio id="bgMusic" loop>
+        <source src="images/nathaniel_bassey_there_is_a_place_CeeNaija.com_.mp3" type="audio/mpeg">
+        <!-- Fallback for browsers that don't support audio -->
+    </audio>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="images/file_00000000812c624695d3430ec4e062d0.png" alt="Shacka Shaya Logo">
+                <span class="logo-text">Shacka Shaya</span>
+            </div>
+            <button class="music-control" id="musicControl">
+                <i class="fas fa-music"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <img src="images/IMG-20250612-WA0344.jpg" class="hero-image">
+            <!-- <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cdefs%3E%3ClinearGradient id='personGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23D4AF37;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23FFD700;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='100' cy='100' r='95' fill='url(%23personGrad)'/%3E%3Ccircle cx='100' cy='80' r='30' fill='%23654321'/%3E%3Cpath d='M70 120 Q100 140 130 120 Q130 160 100 170 Q70 160 70 120' fill='%23FFA500'/%3E%3Cpath d='M85 70 Q100 60 115 70 Q115 85 100 90 Q85 85 85 70' fill='%23333'/%3E%3Ccircle cx='90' cy='75' r='3' fill='white'/%3E%3Ccircle cx='110' cy='75' r='3' fill='white'/%3E%3Cpath d='M95 82 Q100 85 105 82' stroke='%23333' stroke-width='2' fill='none'/%3E%3C/svg%3E" alt="Shacka Shaya" class="hero-image"> -->
+            <h1 class="hero-title">SHACKA SHAYA</h1>
+            <p class="hero-subtitle">Rain of Glory</p>
+            <p class="hero-description">
+                Together we praise and worship His holy name. Join us for a night of prayer, worship, and divine encounter as we experience the rain of God's glory.
+            </p>
+        </div>
+    </section>
+
+    <!-- Countdown Section -->
+    <section class="countdown-section">
         <div class="countdown-container">
+            <h2 class="section-title">Countdown to Revival</h2>
             <div class="countdown" id="countdown">
-                <div class="time-unit" style="--delay: 0s">
-                    <span class="time-number" id="days">00</span>
-                    <span class="time-label">Days</span>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="days">00</span>
+                    <span class="countdown-label">Days</span>
                 </div>
-                <div class="time-unit" style="--delay: 0.1s">
-                    <span class="time-number" id="hours">00</span>
-                    <span class="time-label">Hours</span>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="hours">00</span>
+                    <span class="countdown-label">Hours</span>
                 </div>
-                <div class="time-unit" style="--delay: 0.2s">
-                    <span class="time-number" id="minutes">00</span>
-                    <span class="time-label">Minutes</span>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="minutes">00</span>
+                    <span class="countdown-label">Minutes</span>
                 </div>
-                <div class="time-unit" style="--delay: 0.3s">
-                    <span class="time-number" id="seconds">00</span>
-                    <span class="time-label">Seconds</span>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="seconds">00</span>
+                    <span class="countdown-label">Seconds</span>
                 </div>
             </div>
-        </div>
-
-        <div class="event-details">
+            
+            <div class="event-details">
+               
+                 <div class="event-details">
             <div class="detail-item">
                 <svg class="detail-icon" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
@@ -351,7 +610,7 @@
                 <svg class="detail-icon" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
                 </svg>
-                <span><strong>Venue:</strong> LCC Rumudara, Woji Port Harcourt</span>
+                <span><strong>Venue:</strong> LFC Rumougba, Woji Port Harcourt</span>
             </div>
             <div class="detail-item">
                 <svg class="detail-icon" fill="currentColor" viewBox="0 0 20 20">
@@ -361,101 +620,602 @@
             </div>
         </div>
 
-        <div class="cta-section">
-            <button class="cta-button" onclick="shareEvent()">Share This Event</button>
-        </div>
-    </div>
 
-    <div class="footer">
-        <p>Powered by <a href="#" target="_blank">King of Programming Tehilla</a></p>
-        <p style="margin-top: 10px; opacity: 0.7;">© 2025 Shacka Shaya. All rights reserved.</p>
-    </div>
+                <div class="event-description">
+                    REVIVE - Night of Prayer. A divine encounter awaits as we gather in unity to praise and worship His holy name. Experience the manifestation of God's glory like never before.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section">
+        <div class="gallery-container">
+            <h2 class="section-title">Gallery</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="./images/ministering.jpg" alt="Worship Moment">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">Worship in Spirit</div>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/Screenshot (7).png" alt="Prayer Session">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">Prayer & Intercession</div>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/msi.webp" alt="Rain of Glory">
+                    <div class="gallery-overlay">
+                        <div class="gallery-text">Rain of Glory</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">Shacka Shaya</div>
+            <div class="footer-text">
+                Rain of Glory - A divine encounter awaits
+            </div>
+            <div class="footer-credits">
+                Powered by King Of Programming Tehilla
+            </div>
+        </div>
+    </footer>
 
     <script>
         // Countdown Timer
         function updateCountdown() {
-            const eventDate = new Date('2025-07-20T15:00:00').getTime();
+            // Third Sunday of July 2025
+            const targetDate = new Date('2025-07-20T15:00:00').getTime();
             const now = new Date().getTime();
-            const timeLeft = eventDate - now;
+            const distance = targetDate - now;
 
-            if (timeLeft > 0) {
-                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                document.getElementById('days').textContent = days.toString().padStart(2, '0');
-                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-            } else {
-                document.getElementById('countdown').innerHTML = '<div class="time-unit"><span class="time-number">Event Started!</span></div>';
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+
+            if (distance < 0) {
+                document.getElementById('countdown').innerHTML = '<div class="countdown-item"><span class="countdown-number">LIVE</span><span class="countdown-label">Now</span></div>';
             }
         }
 
+        // Update countdown every second
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Music control
+        const musicControl = document.getElementById('musicControl');
+        const bgMusic = document.getElementById('bgMusic');
+        let isMuted = true;
+
+        musicControl.addEventListener('click', function() {
+            if (isMuted) {
+                bgMusic.play().catch(e => console.log('Audio autoplay prevented'));
+                musicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
+                isMuted = false;
+            } else {
+                bgMusic.pause();
+                musicControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                isMuted = true;
+            }
+        });
+
         // Create floating particles
         function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 50;
-
-            for (let i = 0; i < particleCount; i++) {
+            const particlesContainer = document.querySelector('.particles');
+            
+            for (let i = 0; i < 50; i++) {
                 const particle = document.createElement('div');
-                particle.className = 'particle';
+                particle.classList.add('particle');
                 particle.style.left = Math.random() * 100 + '%';
-                particle.style.width = Math.random() * 4 + 2 + 'px';
-                particle.style.height = particle.style.width;
-                particle.style.animationDelay = Math.random() * 20 + 's';
-                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 5) + 's';
                 particlesContainer.appendChild(particle);
             }
         }
 
-        // Share event function
-        function shareEvent() {
-            const shareData = {
-                title: 'Shacka Shaya - Revive Night of Prayer',
-                text: 'Join us for a powerful night of prayer and worship on July 20th, 2025 at 3PM. Together we praise and worship His Holy Name!',
-                url: window.location.href
-            };
+        // Initialize particles
+        createParticles();
 
-            if (navigator.share && navigator.canShare(shareData)) {
-                navigator.share(shareData);
-            } else {
-                // Fallback for browsers that don't support Web Share API
-                const text = `${shareData.title}\n${shareData.text}\n${shareData.url}`;
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(text).then(() => {
-                        alert('Event details copied to clipboard!');
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
                     });
-                } else {
-                    alert('Please share manually: ' + text);
                 }
-            }
-        }
-
-        // Add interactive hover effects
-        document.addEventListener('DOMContent Loaded', function() {
-            const timeUnits = document.querySelectorAll('.time-unit');
-            timeUnits.forEach(unit => {
-                unit.addEventListener('mouseenter', function() {
-                    this.style.transform = 'scale(1.1) rotate(2deg)';
-                });
-                unit.addEventListener('mouseleave', function() {
-                    this.style.transform = 'scale(1) rotate(0deg)';
-                });
             });
         });
 
-        // Initialize everything
-        updateCountdown();
-        createParticles();
-        setInterval(updateCountdown, 1000);
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
 
-        // Add scroll animations
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.querySelectorAll('.countdown-item, .gallery-item, .event-details').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Enhanced hover effects for countdown items
+        document.querySelectorAll('.countdown-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-15px) scale(1.05)';
+                this.style.boxShadow = '0 25px 50px rgba(212, 175, 55, 0.4)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+                this.style.boxShadow = '0 10px 30px rgba(212, 175, 55, 0.2)';
+            });
+        });
+
+        // Dynamic background color change based on scroll
+        window.addEventListener('scroll', function() {
+            const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+            const hue = Math.floor(scrollPercent * 60); // Changes from 0 to 60 degrees
+            document.body.style.background = `linear-gradient(135deg, hsl(${hue}, 20%, 4%) 0%, hsl(${hue + 20}, 30%, 8%) 50%, hsl(${hue + 40}, 25%, 12%) 100%)`;
+        });
+
+        // Add typing effect to hero subtitle
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.innerHTML = '';
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Initialize typing effect after page load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                const subtitle = document.querySelector('.hero-subtitle');
+                typeWriter(subtitle, 'Rain of Glory', 150);
+            }, 1000);
+        });
+
+        // Add ripple effect to buttons
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const circle = document.createElement('span');
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+            circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
+            circle.classList.add('ripple');
+
+            const ripple = button.getElementsByClassName('ripple')[0];
+            if (ripple) {
+                ripple.remove();
+            }
+
+            button.appendChild(circle);
+        }
+
+        // Add ripple styles
+        const rippleStyle = document.createElement('style');
+        rippleStyle.textContent = `
+            .ripple {
+                position: absolute;
+                border-radius: 50%;
+                transform: scale(0);
+                animation: ripple 600ms linear;
+                background-color: rgba(255, 255, 255, 0.6);
+            }
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(rippleStyle);
+
+        // Apply ripple effect to music control
+        document.querySelector('.music-control').addEventListener('click', createRipple);
+
+        // Add glowing effect to logo on hover
+        document.querySelector('.logo').addEventListener('mouseenter', function() {
+            this.style.filter = 'drop-shadow(0 0 20px rgba(212, 175, 55, 0.8))';
+        });
+
+        document.querySelector('.logo').addEventListener('mouseleave', function() {
+            this.style.filter = 'none';
+        });
+
+        // Enhanced gallery item interactions
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.zIndex = '10';
+                this.style.transform = 'scale(1.08) translateZ(0)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.zIndex = '1';
+                this.style.transform = 'scale(1) translateZ(0)';
+            });
+        });
+
+        // Add parallax effect to hero section
         window.addEventListener('scroll', function() {
             const scrolled = window.pageYOffset;
-            const particles = document.getElementById('particles');
-            particles.style.transform = 'translateY(' + scrolled * 0.5 + 'px)';
+            const hero = document.querySelector('.hero');
+            const rate = scrolled * -0.5;
+            hero.style.transform = `translateY(${rate}px)`;
+        });
+
+        // Preloader effect
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 1s ease-in-out';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // Add golden hour lighting effect
+        function updateLighting() {
+            const hour = new Date().getHours();
+            let intensity = 0.1;
+            
+            if (hour >= 6 && hour <= 8) { // Morning golden hour
+                intensity = 0.3;
+            } else if (hour >= 17 && hour <= 19) { // Evening golden hour
+                intensity = 0.4;
+            }
+            
+            document.documentElement.style.setProperty('--lighting-intensity', intensity);
+        }
+
+        updateLighting();
+        setInterval(updateLighting, 60000); // Update every minute
+
+        // Add custom cursor effect for interactive elements
+        const cursor = document.createElement('div');
+        cursor.style.cssText = `
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.8) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            display: none;
+        `;
+        document.body.appendChild(cursor);
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+            cursor.style.display = 'block';
+        });
+
+        // Enhanced interactive elements
+        document.querySelectorAll('.countdown-item, .gallery-item, .music-control').forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(2)';
+                cursor.style.background = 'radial-gradient(circle, rgba(255, 215, 0, 0.9) 0%, transparent 70%)';
+            });
+            
+            element.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+                cursor.style.background = 'radial-gradient(circle, rgba(212, 175, 55, 0.8) 0%, transparent 70%)';
+            });
+        });
+
+        // Add success message for music interaction
+        function showMusicMessage(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: linear-gradient(45deg, var(--primary-gold), var(--deep-gold));
+                color: var(--dark-bg);
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                font-weight: 600;
+                z-index: 10000;
+                transform: translateX(300px);
+                transition: transform 0.3s ease;
+                box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            `;
+            messageDiv.textContent = message;
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                messageDiv.style.transform = 'translateX(300px)';
+                setTimeout(() => {
+                    document.body.removeChild(messageDiv);
+                }, 300);
+            }, 2000);
+        }
+
+        // Update music control with messages
+        const originalMusicControl = musicControl.cloneNode(true);
+        musicControl.parentNode.replaceChild(originalMusicControl, musicControl);
+        
+        originalMusicControl.addEventListener('click', function() {
+            if (isMuted) {
+                bgMusic.play().catch(e => {
+                    console.log('Audio autoplay prevented');
+                    showMusicMessage('Click to enable worship music 🎵');
+                });
+                originalMusicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
+                showMusicMessage('Worship music enabled 🎵');
+                isMuted = false;
+            } else {
+                bgMusic.pause();
+                originalMusicControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                showMusicMessage('Music paused');
+                isMuted = true;
+            }
+        });
+
+
+        // Disable right-click context menu
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // Disable key combinations
+        document.addEventListener('keydown', function(e) {
+            // Disable F12
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Disable Ctrl+Shift+I (Inspector)
+            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Disable Ctrl+U (View Source)
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Disable Ctrl+Shift+J (Console)
+            if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Disable Ctrl+Shift+C (Inspect Element)
+            if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Disable Ctrl+A (Select All)
+            if (e.ctrlKey && e.key === 'a') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Disable Ctrl+S (Save)
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Disable Ctrl+P (Print)
+            if (e.ctrlKey && e.key === 'p') {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // Clear page content function
+        function clearPage() {
+            document.body.innerHTML = `
+                <div style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                    background: #000;
+                    color: #fff;
+                    font-family: Arial, sans-serif;
+                    flex-direction: column;
+                ">
+                    <h1>🚫 Access Denied</h1>
+                    <p>Developer tools detected. Content has been cleared for security.</p>
+                    <button onclick="location.reload()" style="
+                        padding: 10px 20px;
+                        background: #ff4444;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        margin-top: 20px;
+                    ">Reload Page</button>
+                </div>
+            `;
+        }
+        
+        // Developer tools detection methods
+        let devtools = false;
+        
+        // Method 1: Console detection
+        setInterval(function() {
+            if (window.console && window.console.clear) {
+                try {
+                    window.console.clear();
+                } catch(e) {}
+            }
+        }, 100);
+        
+        // Method 2: Debugger detection
+        setInterval(function() {
+            const before = new Date().getTime();
+            debugger;
+            const after = new Date().getTime();
+            if (after - before > 100) {
+                if (!devtools) {
+                    devtools = true;
+                    clearPage();
+                }
+            }
+        }, 500);
+        
+        // Method 3: Window size detection
+        setInterval(function() {
+            if (window.outerHeight - window.innerHeight > 200 || 
+                window.outerWidth - window.innerWidth > 200) {
+                if (!devtools) {
+                    devtools = true;
+                    clearPage();
+                }
+            }
+        }, 500);
+        
+        // Method 4: toString detection
+        let element = document.createElement('div');
+        element.__defineGetter__('id', function() {
+            if (!devtools) {
+                devtools = true;
+                clearPage();
+            }
+        });
+        setInterval(function() {
+            console.log(element);
+        }, 1000);
+        
+        // Method 5: Performance detection
+        setInterval(function() {
+            const start = performance.now();
+            console.log('DevTools Check');
+            const end = performance.now();
+            if (end - start > 1) {
+                if (!devtools) {
+                    devtools = true;
+                    clearPage();
+                }
+            }
+        }, 1000);
+        
+        // Disable text selection
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // Disable drag
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // Clear console messages
+        if (window.console) {
+            window.console.log = function() {};
+            window.console.warn = function() {};
+            window.console.error = function() {};
+            window.console.info = function() {};
+            window.console.debug = function() {};
+        }
+        
+        // Disable image saving
+        document.addEventListener('dragstart', function(e) {
+            if (e.target.tagName === 'IMG') {
+                e.preventDefault();
+            }
+        });
+        
+        // Additional protection against common inspection methods
+        document.addEventListener('keyup', function(e) {
+            if (e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                (e.ctrlKey && e.key === 'u')) {
+                clearPage();
+            }
+        });
+        
+        // Monitor for developer tools being opened
+        let threshold = 160;
+        setInterval(function() {
+            if (window.innerHeight < threshold || window.innerWidth < threshold) {
+                if (!devtools) {
+                    devtools = true;
+                    clearPage();
+                }
+            }
+        }, 500);
+        
+        // Disable print screen
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'PrintScreen') {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // Show warning message
+        console.log('%c🚫 STOP!', 'color: red; font-size: 50px; font-weight: bold;');
+        console.log('%cThis is a browser feature intended for developers. If someone told you to copy-paste something here, it is a scam and will give them access to your account.', 'color: red; font-size: 16px;');
+        
+        // Redirect on back button
+        window.addEventListener('beforeunload', function(e) {
+            if (!devtools) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
         });
     </script>
 </body>
